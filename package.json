@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@generouted/react-router": "^1.15.5",
+    "@mui/material": "^5.14.5",
+    "@mui/styled-engine-sc": "^5.12.0",
     "generouted": "^1.15.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.15.0",
+    "styled-components": "^5.3.11"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
