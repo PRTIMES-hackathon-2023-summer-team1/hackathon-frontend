@@ -3,13 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Box, Button, FormControl, TextField, InputAdornment, Divider } from '@mui/material'
 import markdownit from 'markdown-it'
+import { ref, uploadBytes } from 'firebase/storage'
+import { storage } from '../../firebase'
 import Loading from '../../components/loading'
 
 export default function NewTour() {
 
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [image, setImage] = useState(null)
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -19,7 +22,7 @@ export default function NewTour() {
   const [lastDay, setLastDay] = useState('')
   const [maxCapacity, setMaxCapacity] = useState(0)
 
-  // ページアクセス時にユーザーが管理者かどうかを確認する
+  // ページアクセス時にユーザーが管理者かどうかを確認
   useEffect(() => {
     const checkIsAdmin = async () => {
       try {
@@ -35,7 +38,7 @@ export default function NewTour() {
         }
       } catch (e) {
         console.error(e)
-        navigate('/')
+        //navigate('/')
       }
     }
     checkIsAdmin()
@@ -50,6 +53,7 @@ export default function NewTour() {
         },
       })
       const response = await api.post('/tours', {
+        user_id: 1, // temporary user_id
         name: name,
         description: description,
         body: body,
@@ -72,6 +76,23 @@ export default function NewTour() {
     } catch (error) {
       console.error(e)
       setErrorMessage(error.response?.data?.message || error.message)
+    }
+  }
+
+  // 画像アップロード
+  const handleImageUpload = () => {
+    if (image) {
+      const uuid = crypto.randomUUID()
+      const storageRef = ref(storage, `images/${uuid}`);
+      uploadBytes(storageRef, image).then((snapshot) => {
+        setBody(body + `\n![](https://firebasestorage.googleapis.com/v0/b/prtimes-hackathon.appspot.com/o/images%2F${uuid}?alt=media)`)
+        setImage(null)
+      })
+    }
+  }
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0])
     }
   }
 
@@ -164,6 +185,10 @@ export default function NewTour() {
               </FormControl>
             </div>
           </Box>
+          <div>
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <button onClick={handleImageUpload}>アップロード</button>
+          </div>
           <Divider variant="inset" sx={{ m: '1ch' }} />
           <Box sx={{ m: '1ch' }}>
             <h2>プレビュー</h2>
