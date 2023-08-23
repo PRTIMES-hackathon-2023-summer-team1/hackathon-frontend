@@ -1,0 +1,21 @@
+
+
+
+.tourInfo{
+    border: 2px solid black;
+    width: 300px;
+}
+
+.tourInfo > a {
+    display: block;
+    color: black;
+}
+
+.container{
+    padding-inline: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+    justify-content: center;
+}

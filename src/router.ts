@@ -7,9 +7,10 @@ export type Path =
   | `/`
   | `/example`
   | `/tours/new`
+  | `/tours/:id`
 
 export type Params = {
-  
+  '/tours/:id': { id: string }
 }
 
 export type ModalPath = never
