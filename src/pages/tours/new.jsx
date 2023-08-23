@@ -85,8 +85,7 @@ export default function NewTour() {
       const uuid = crypto.randomUUID()
       const storageRef = ref(storage, `images/${uuid}`);
       uploadBytes(storageRef, image).then((snapshot) => {
-        setBody(body + `\n![](https://firebasestorage.googleapis.com/v0/b/prtimes-hackathon.appspot.com/o/images%2F${uuid}?alt=media)`)
-        setImage(null)
+        setBody(body + `![](https://firebasestorage.googleapis.com/v0/b/prtimes-hackathon.appspot.com/o/images%2F${uuid}?alt=media)`)
       })
     }
   }
@@ -104,7 +103,7 @@ export default function NewTour() {
           <Box
             component="form"
             sx={{
-              '& .MuiTextField-root': { m: 1, width: '50ch' },
+              '& .MuiTextField-root': { m: 1, width: '75ch' },
             }}
           >
             <div>
@@ -176,7 +175,6 @@ export default function NewTour() {
                   onChange={(e) => setMaxCapacity(e.target.value)}
                 />
                 <Button
-                  variant="contained"
                   onClick={handleSubmit}
                 >
                   新規作成
@@ -185,10 +183,12 @@ export default function NewTour() {
               </FormControl>
             </div>
           </Box>
-          <div>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-            <button onClick={handleImageUpload}>アップロード</button>
-          </div>
+          <Box sx={{ m: '1ch' }}>
+            <div>
+              <input type="file" accept="image/*" onChange={handleImageChange} />
+              <button onClick={handleImageUpload}>アップロード</button>
+            </div>
+          </Box>
           <Divider variant="inset" sx={{ m: '1ch' }} />
           <Box sx={{ m: '1ch' }}>
             <h2>プレビュー</h2>
