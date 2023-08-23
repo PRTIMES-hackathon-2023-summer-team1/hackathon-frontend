@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { Box, Button, FormControl, TextField, InputAdornment } from '@mui/material'
+import { Box, Button, FormControl, TextField, InputAdornment, Divider } from '@mui/material'
+import markdownit from 'markdown-it'
 import Loading from '../../components/loading'
 
 export default function NewTour() {
@@ -162,9 +163,18 @@ export default function NewTour() {
                 {errorMessage}
               </FormControl>
             </div>
-
           </Box>
-        </div>      
+          <Divider variant="inset" sx={{ m: '1ch' }} />
+          <Box sx={{ m: '1ch' }}>
+            <h2>プレビュー</h2>
+            <Divider variant="inset" sx={{ m: '1ch' }} />
+            <div style={{ textAlign: 'left' }}>
+              <div
+                dangerouslySetInnerHTML={{ __html: markdownit().render(body) }}
+              />
+            </div>
+          </Box>
+        </div>
       )}
     </div>
   )
