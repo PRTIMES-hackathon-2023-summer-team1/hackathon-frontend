@@ -1,37 +1,31 @@
-
-.tourInfo{
-    border: 2px solid black;
-    width: 300px;
-    height: 250px;
+.tourInfo {
+  border-radius: 20px;
+  box-shadow: 0px 1px 5px rgb(0 0 0 / 8%);
+  padding: 10px 15px;
+  transition: box-shadow ease-in-out 0.5s;
 }
-
 
 .tourInfo > a {
-    display: block;
-    color: black;
+  display: block;
+  color: black;
 }
 
-.container{
-    padding-inline: 24px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    list-style: none;
-    justify-content: center;
+.container {
+  padding-inline: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  list-style: none;
+  justify-content: center;
 }
-
 
 .container a{
     color: #181E4B;
     text-decoration: none;
 }
 
-
-
 /* .tourInfo::after{
     content:"";
     display: block;
     width: 300px;
 } */
-
-

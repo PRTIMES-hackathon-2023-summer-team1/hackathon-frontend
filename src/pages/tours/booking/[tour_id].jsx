@@ -13,7 +13,7 @@ import "./tour_id.css";
 
 function App() {
   const { tour_id } = useParams();
-  const [tourData, setTourData] = useState({});
+  const [tourData, setTourData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [people, setPeople] = useState(1);
   const handleChange = (event) => {
@@ -46,6 +46,28 @@ function App() {
 
   if (!tourData) return <></>;
 
+  const postBookingInfo = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:8080/booking", {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+
+        body: JSON.stringify({
+          user_id: tourData.user_id,
+          tour_id: tourData.tour_id,
+          participants: people,
+        }), // 本体のデータ型は "Content-Type" ヘッダーと一致させる必要があります
+      });
+      return response.json(); // JSON のレスポンスをネイティブの JavaScript オブジェクトに解釈
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <div className="bookingForm">
@@ -76,12 +98,7 @@ function App() {
                 ))}
               </Select>
             </FormControl>
-            <Button
-              variant="contained"
-              onClick={() => {
-                window.location.href = "/booking";
-              }}
-            >
+            <Button variant="contained" onClick={postBookingInfo}>
               予約
             </Button>
           </Box>
@@ -90,5 +107,4 @@ function App() {
     </>
   );
 }
-
 export default App;
