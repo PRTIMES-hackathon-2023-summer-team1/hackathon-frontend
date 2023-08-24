@@ -19,8 +19,9 @@
   justify-content: center;
 }
 
-.container a {
-  color: #181e4b;
+.container a{
+    color: #181E4B;
+    text-decoration: none;
 }
 
 /* .tourInfo::after{

@@ -1,13 +1,18 @@
-import { getTours } from "../../lib/getTours";
 import "./index.css";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { Box, TextField, Button, Grid } from '@mui/material'
 import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
+import Loading from "../components/loading";
 dayjs.locale(ja);
 
 function App() {
+
+  const [searchKeyword, setSearchKeyword] = useState('')
+
   const [data, setData] = useState([]); // <-- Generics で受け取った型を data の型とする
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
 
   useEffect(() => {
@@ -20,7 +25,7 @@ function App() {
         console.error(err);
         setError(true);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     })();
   }, []);
@@ -30,26 +35,77 @@ function App() {
   }
 
   if (isLoading) {
-    return <p>読み込み中</p>;
+    return <Loading/>;
   }
 
   return (
     <>
-      <ul className="container">
-        {data.map((tour) => (
-          <a href={`/tours/${tour.tour_id}`}>
-            <li className="tourInfo">
-              <h2>{tour.name}</h2>
-              <h3>￥{tour.price}</h3>
-              <p>{tour.description}</p>
-              <h4>
-                {dayjs(tour.first_day).format("YYYY/MM/DD hh:mm")} -
-                {dayjs(tour.last_day).format("YYYY/MM/DD hh:mm")}
-              </h4>
-            </li>
-          </a>
-        ))}
-      </ul>
+
+      <Box >
+        <Grid container>
+          <Grid item xs={11}>
+            <TextField
+              required
+              id="ここに単語を入れて検索"
+              label="ここに単語を入れて検索"
+              fullWidth
+              value={searchKeyword}
+              onChange={(e)=>{setSearchKeyword(e.target.value)}}
+            />
+          </Grid>
+          <Grid item xs={1}>
+            <Button
+              sx={{ m: '1ch' }}
+              variant="contained"
+              fullWidth
+              onClick={async (e)=>{
+                if (searchKeyword === '') {
+                  alert('検索ワードを入力してください')
+                  return
+                }
+                // 検索して表示するデータを更新する
+                setIsLoading(true)
+                try {
+                  const response = await axios.get(`/tours/search?keyword=${searchKeyword}`, {
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `DummyToken`,
+                    },
+                  })
+                  if (response.status === 200) {
+                    setData(response.data)
+                    setIsLoading(false)
+                  } else {
+                    console.error(response.error)
+                  }
+                } catch (error) {
+                  console.error(error)
+                }
+              }}
+            >
+              検索
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+
+      { data.length === 0 ? <h1>検索結果がありません</h1> :
+        <ul className="container">
+          {data.map((tour) => (
+            <a href={`/tours/${tour.tour_id}`}>
+              <li className="tourInfo">
+                <h2>{tour.name}</h2>
+                <h3>￥{tour.price}</h3>
+                <p>{tour.description}</p>
+                <h4>
+                  {dayjs(tour.first_day).format("YYYY/MM/DD hh:mm")} -
+                  {dayjs(tour.last_day).format("YYYY/MM/DD hh:mm")}
+                </h4>
+              </li>
+            </a>
+          ))}
+        </ul>
+      }
     </>
   );
 }
