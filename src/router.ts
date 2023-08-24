@@ -10,9 +10,11 @@ export type Path =
   | `/signup`
   | `/tours/new`
   | `/tours/:id`
+  | `/tours/edit/:id`
 
 export type Params = {
   '/tours/:id': { id: string }
+  '/tours/edit/:id': { id: string }
 }
 
 export type ModalPath = never

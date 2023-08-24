@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { Box, Button, FormControl, TextField, InputAdornment, Divider } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
@@ -7,13 +7,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import markdownit from 'markdown-it'
 import { ref, uploadBytes } from 'firebase/storage'
-import { storage } from '../../firebase'
-import Loading from '../../components/loading'
+import { storage } from '../../../firebase'
+import Loading from '../../../components/loading'
 
 export default function NewTour() {
 
+  const tourId = useParams().id
+
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const [image, setImage] = useState(null)
 
@@ -24,6 +26,36 @@ export default function NewTour() {
   const [firstDay, setFirstDay] = useState()
   const [lastDay, setLastDay] = useState()
   const [maxCapacity, setMaxCapacity] = useState(0)
+
+  // ツアー情報を取得
+  const getTourData = async () => {
+    try {
+      const response = await axios.get(`/tours/${tourId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `DummyToken`,
+        },
+      })
+      if (response.status === 200) {
+        const tourData = response.data
+        setName(tourData.name)
+        setDescription(tourData.description)
+        setBody(tourData.body)
+        setPrice(tourData.price)
+        // TODO: 日付のフォーマットを変換
+        // setFirstDay(tourData.first_day)
+        // setLastDay(tourData.last_day)
+        setMaxCapacity(tourData.max_capacity)
+        setIsLoading(false)
+      } else {
+        console.error(error)
+        setErrorMessage(response.data.message)
+      }
+    } catch (error) {
+      console.error(error)
+      setErrorMessage(error.response?.data?.message || error.message)
+    }
+  }
 
   // 管理者かどうかを確認
   const checkIsAdmin = async () => {
@@ -45,7 +77,7 @@ export default function NewTour() {
     }
   }
 
-  // 新規ツアー作成
+  // 編集を上書きして保存
   const handleSubmit = async () => {
     try {
       const api = axios.create({
@@ -54,7 +86,8 @@ export default function NewTour() {
           'Authorization': `DummyToken`,
         },
       })
-      const response = await api.post('/tours', {
+      const response = await api.put('/tours', {
+        tour_id: tourId,
         user_id: '1', // temporary user_id
         name: name,
         description: description,
@@ -66,6 +99,7 @@ export default function NewTour() {
         current_capacity: 0,
       })
       if (response.status === 200) {
+        console.log(response.data)
         navigate(`/tours/${response.data.tour_id}`)
       } else {
         console.error(error)
@@ -96,13 +130,14 @@ export default function NewTour() {
   // ページアクセス時
   useEffect(() => {
     //checkIsAdmin()
+    getTourData()
   }, [])
 
   return (
     <div>
       {isLoading ? <Loading /> : (
         <div>
-          <h1>ツアーの作成</h1>
+          <h1>ツアーの編集</h1>
           <Box
             component="form"
             sx={{
@@ -195,7 +230,7 @@ export default function NewTour() {
                 <Button
                   onClick={handleSubmit}
                 >
-                  新規作成
+                  上書きして保存
                 </Button>
                 {errorMessage}
               </FormControl>
