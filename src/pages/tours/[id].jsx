@@ -1,99 +1,83 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
-import { getTour } from "../../../lib/getTour";
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import './id.css'
+import { useParams, useNavigate } from "react-router-dom"
+import axios from "axios"
+import { Box, Button, Divider } from '@mui/material'
+import markdownit from 'markdown-it'
+import dayjs from 'dayjs'
+import Loading from "../../components/loading";
 
 
+export default function ViewOneTour() {
 
-function App() {
-  const {id} = useParams()
-  const [data, setData] = useState()
-  const [people, setPeople] = useState(1);
-  const handleChange = (event) => {
-    setPeople(event.target.value);
-  };
+  const tourId = useParams().id
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false) // 仮置き，認証ができたらContextに移行
+  const [tourData, setTourData] = useState({})
 
+  // ツアー情報を取得
+  const getTourData = async () => {
+    try {
+      const response = await axios.get(`/tours/${tourId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `DummyToken`,
+        },
+      })
+      if (response.status === 200) {
+        setTourData(response.data)
+        setIsLoading(false)
+      } else {
+        console.error(error)
+        navigate('/')
+      }
+    } catch (error) {
+      console.error(error)
+      navigate('/')
+    }
+  }
 
-
-
+  const redirectToBooking = () => {
+    if (isLoggedIn) {
+      navigate(`/tours/booking/${tourId}`)
+    } else {
+      navigate(`/login?redirect=/tours/booking/${tourId}`)
+    }
+  }
 
   useEffect(() => {
-    // 即時関数
-    (async() => {
-      try {
-        const data = await getTour(id);
-        setData(data);
-      } catch(err) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    })()
-  }, []);
-
-  if (!data) return <></>
-
-  
+    getTourData()
+  }, [])
 
   return (
-    <>
     <div className="detail">
+      {isLoading ? <Loading /> : (
+        <>
+          <div className="Info">
+            <h2>{tourData.name}</h2>
+            <p>{tourData.description}</p>
+            <p>{dayjs(tourData.first_day).format("YYYY/MM/DD hh:mm")} ~ {dayjs(tourData.last_day).format("YYYY/MM/DD hh:mm")}</p>
+            <p>{tourData.price}円/人</p>
+          </div>
 
-      <div className="Info">
-        <p>tour id: {id}</p>
-        <h2>{data.name}</h2>
-        <p>{data.price}円/ 1人</p>
-        <p>{data.description}</p>
-      </div>
-   
-   {/* /bookingPageにするなら↓ */}
-      <Button variant="contained" onClick={() => {window.location.href = '/booking'}}>予約</Button>
-      
+          <Box sx={{ m: '1ch' }}>
+            <Divider variant="inset" />
+            <div style={{ textAlign: 'left' }}>
+              <div
+                dangerouslySetInnerHTML={{ __html: markdownit().render(String(tourData.body)) }}
+              />
+            </div>
+          </Box>
 
-
-<Paper elevation={3} sx={{width: 600}} className="booking">
-      <p>Tour:{data.name}</p>
-          {/* <p>your name: {}</p> */}
-          <p>user_id:{data.user_id}</p>
-          <p>price: {data.price * people + "円"}</p>
-          <p>date: {data.dates.first_day} - {data.dates.last_day}</p>
-
-          <Box sx={{ minWidth: 120 }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">People</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={people}
-            label="People"
-            onChange={handleChange}
-            sx={{width: 200}}
+          <Button
+            variant="contained"
+            onClick={redirectToBooking}
           >
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-          </Select>
-        </FormControl>
-        
-        {/* bookingにPOSTする？ */}
-        <Button variant="contained" onClick={() => {window.location.href = '/booking'}}>予約</Button>
-      </Box>
-    </Paper>
+            このツアーを予約する
+          </Button>
 
-
-
-
+        </>
+      )}
     </div>
-    </>
   )
 }
-
-export default App

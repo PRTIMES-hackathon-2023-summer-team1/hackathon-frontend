@@ -1,7 +1,9 @@
 import { useState } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { red } from "@mui/material/colors";
 
 
 function App() {
@@ -9,28 +11,39 @@ function App() {
     const [email, setEmail] = useState('');
     const [password, setPassWord] = useState('');
 
+    const navigate = useNavigate()
+    const [param] = useSearchParams()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('/login', {
-                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                headers: {
-                  "Content-Type": "application/json",
-                  // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
+            // const response = await fetch('/login', {
+            //     method: "POST", // *GET, POST, PUT, DELETE, etc.
+            //     headers: {
+            //       "Content-Type": "application/json",
+            //       // 'Content-Type': 'application/x-www-form-urlencoded',
+            //     },
                 
-                body: JSON.stringify({
-                'email': email,
-                'password': password}), // 本体のデータ型は "Content-Type" ヘッダーと一致させる必要があります
-              });
-              return response.json(); // JSON のレスポンスをネイティブの JavaScript オブジェクトに解釈
+            //     body: JSON.stringify({
+            //     'email': email,
+            //     'password': password}), // 本体のデータ型は "Content-Type" ヘッダーと一致させる必要があります
+            //   });
+            //   return response.json(); // JSON のレスポンスをネイティブの JavaScript オブジェクトに解釈
+
+              // ログインに成功したときのリダイレクト処理
+              const redirectPath = param.get('redirect')
+              if (redirectPath) {
+                navigate(redirectPath)
+              } else {
+                navigate('/')
+              }
+
             }
             
         catch (error) {
             console.error(error);
           }
-        }   
+    }   
 
   return (
     <>
