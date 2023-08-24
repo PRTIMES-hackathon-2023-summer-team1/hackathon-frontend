@@ -1,6 +1,6 @@
-import { getTours } from "../../lib/getTours";
 import "./index.css";
 import { useEffect, useState } from "react";
+import { Box, TextField, Button, Grid } from '@mui/material'
 import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
 dayjs.locale(ja);
@@ -35,6 +35,30 @@ function App() {
 
   return (
     <>
+
+      <Box >
+        <Grid container>
+          <Grid item xs={11}>
+            <TextField
+              required
+              id="ここに単語を入れて検索"
+              label="ここに単語を入れて検索"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={1}>
+            <Button
+              sx={{ m: '1ch' }}
+              variant="contained"
+              fullWidth
+              onClick={(e)=>{}}
+            >
+              検索
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+
       <ul className="container">
         {data.map((tour) => (
           <a href={`/tours/${tour.tour_id}`}>
