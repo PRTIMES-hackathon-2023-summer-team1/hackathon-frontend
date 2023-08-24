@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Box, Button, FormControl, TextField, InputAdornment, Divider } from '@mui/material'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import markdownit from 'markdown-it'
 import { ref, uploadBytes } from 'firebase/storage'
 import { storage } from '../../firebase'
@@ -18,8 +21,8 @@ export default function NewTour() {
   const [description, setDescription] = useState('')
   const [body, setBody] = useState('')
   const [price, setPrice] = useState(0)
-  const [firstDay, setFirstDay] = useState('')
-  const [lastDay, setLastDay] = useState('')
+  const [firstDay, setFirstDay] = useState()
+  const [lastDay, setLastDay] = useState()
   const [maxCapacity, setMaxCapacity] = useState(0)
 
   // ページアクセス時にユーザーが管理者かどうかを確認
@@ -147,24 +150,39 @@ export default function NewTour() {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                 />
-                <TextField
-                  required
-                  id="開始日"
-                  label="開始日"
-                  size="small"
-                  fullWidth
-                  value={firstDay}
-                  onChange={(e) => setFirstDay(e.target.value)}
-                />
-                <TextField
-                  required
-                  id="終了日"
-                  label="終了日"
-                  size="small"
-                  fullWidth
-                  value={lastDay}
-                  onChange={(e) => setLastDay(e.target.value)}
-                />
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  dateFormats={{ monthAndYear: 'YYYY年 MM月' }}
+                  localeText={{
+                    previousMonth: '前月',
+                    nextMonth: '次月',
+                  }}
+                >
+                  <DateTimePicker
+                    id="開始日"
+                    label="開始日"
+                    inputFormat="YYYY/MM/DD HH:mm"
+                    renderInput={(props) => <StyledTextField InputLabelProps={{ shrink: true }} {...props} />}
+                    ampm={false}
+                    ampmInClock={false}
+                    value={firstDay}
+                    onChange={(newValue) => {
+                      newValue !== null && setFirstDay(newValue?.format('YYYY-MM-DDTHH:mm:ss+09:00'))
+                    }}
+                  />
+                  <DateTimePicker
+                    id="終了日"
+                    label="終了日"
+                    inputFormat="YYYY/MM/DD HH:mm"
+                    renderInput={(props) => <StyledTextField InputLabelProps={{ shrink: true }} {...props} />}
+                    ampm={false}
+                    ampmInClock={false}
+                    value={lastDay}
+                    onChange={(newValue) => {
+                      newValue !== null && setLastDay(newValue?.format('YYYY-MM-DDTHH:mm:ss+09:00'))
+                    }}
+                  />
+                </LocalizationProvider>
                 <TextField
                   required
                   id="定員"
