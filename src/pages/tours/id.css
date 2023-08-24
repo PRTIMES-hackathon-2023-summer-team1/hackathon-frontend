@@ -1,0 +1,24 @@
+.detail{
+    background-color: rgb(206, 206, 206);
+}
+
+
+.Info{
+    text-align: left;
+    height: 400px;
+    padding-left: 8px;
+}
+
+.Info h2{
+    padding-left: 8px;
+    font-size: 40px;
+}
+
+.Info p{
+    padding-left: 8px;
+    font-size: 20px;
+}
+
+.booking{
+    margin: auto;
+}

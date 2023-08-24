@@ -14,9 +14,10 @@ function App() {
         {getTours().map(tour => 
           <a href={`/tours/${tour.tour_lists.tour_id}`}>  
             <li className="tourInfo">
-            <h2>{tour.tour_lists.name}</h2> 
+            <h2>{tour.tour_lists.name}</h2>
+            <h3>￥{tour.tour_lists.price}</h3> 
             <p>{tour.tour_lists.description}</p>
-            <h4>{tour.tour_lists.price}</h4>
+            <h4>{tour.tour_lists.dates.first_day} -{tour.tour_lists.dates.last_day} </h4>
             </li>
           </a>
         )}

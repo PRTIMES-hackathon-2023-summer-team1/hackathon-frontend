@@ -1,10 +1,11 @@
 
-
-
 .tourInfo{
     border: 2px solid black;
     width: 300px;
+    height: 250px;
+
 }
+
 
 .tourInfo > a {
     display: block;
@@ -19,3 +20,18 @@
     list-style: none;
     justify-content: center;
 }
+
+
+.container a{
+    color: #181E4B;
+}
+
+
+
+/* .tourInfo::after{
+    content:"";
+    display: block;
+    width: 300px;
+} */
+
+
