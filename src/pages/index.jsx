@@ -89,21 +89,23 @@ function App() {
         </Grid>
       </Box>
 
-      <ul className="container">
-        {data.map((tour) => (
-          <a href={`/tours/${tour.tour_id}`}>
-            <li className="tourInfo">
-              <h2>{tour.name}</h2>
-              <h3>￥{tour.price}</h3>
-              <p>{tour.description}</p>
-              <h4>
-                {dayjs(tour.first_day).format("YYYY/MM/DD hh:mm")} -
-                {dayjs(tour.last_day).format("YYYY/MM/DD hh:mm")}
-              </h4>
-            </li>
-          </a>
-        ))}
-      </ul>
+      { data.length === 0 ? <h1>検索結果がありません</h1> :
+        <ul className="container">
+          {data.map((tour) => (
+            <a href={`/tours/${tour.tour_id}`}>
+              <li className="tourInfo">
+                <h2>{tour.name}</h2>
+                <h3>￥{tour.price}</h3>
+                <p>{tour.description}</p>
+                <h4>
+                  {dayjs(tour.first_day).format("YYYY/MM/DD hh:mm")} -
+                  {dayjs(tour.last_day).format("YYYY/MM/DD hh:mm")}
+                </h4>
+              </li>
+            </a>
+          ))}
+        </ul>
+      }
     </>
   );
 }
