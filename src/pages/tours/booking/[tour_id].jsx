@@ -5,7 +5,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -14,6 +14,7 @@ import "./tour_id.css";
 function App() {
 
   const { tour_id } = useParams();
+  const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   const [tourData, setTourData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +48,7 @@ function App() {
 
   if (!tourData) return <></>;
 
+  // 予約作成
   const postBookingInfo = async (e) => {
     try {
       const api = axios.create({
@@ -60,7 +62,8 @@ function App() {
         people: people,
       })
       if (response.status === 200) {
-        console.log(response.data)
+        // 予約一覧ページへリダイレクト
+        navigate('/bookings')
       } else {
         console.error(response.error);
       }
