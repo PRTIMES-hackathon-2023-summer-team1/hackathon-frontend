@@ -27,11 +27,11 @@ export default function ViewOneTour() {
         setIsLoading(false)
       } else {
         console.error(error)
-        setErrorMessage(response.data.message)
+        navigate('/')
       }
     } catch (error) {
       console.error(error)
-      setErrorMessage(error.response?.data?.message || error.message)
+      navigate('/')
     }
   }
 
