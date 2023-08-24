@@ -12,7 +12,9 @@ import dayjs from "dayjs";
 import "./tour_id.css";
 
 function App() {
+
   const { tour_id } = useParams();
+  const token = sessionStorage.getItem("token");
   const [tourData, setTourData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [people, setPeople] = useState(1);
@@ -26,7 +28,6 @@ function App() {
       const response = await axios.get(`/tours/${tour_id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `DummyToken`,
         },
       });
       if (response.status === 200) {
@@ -47,22 +48,22 @@ function App() {
   if (!tourData) return <></>;
 
   const postBookingInfo = async (e) => {
-    e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/booking", {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
+      const api = axios.create({
         headers: {
           "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${token}`,
         },
-
-        body: JSON.stringify({
-          user_id: tourData.user_id,
-          tour_id: tourData.tour_id,
-          participants: people,
-        }), // 本体のデータ型は "Content-Type" ヘッダーと一致させる必要があります
-      });
-      return response.json(); // JSON のレスポンスをネイティブの JavaScript オブジェクトに解釈
+      })
+      const response = await api.post(`/bookings`, {
+        tour_id: tour_id,
+        people: people,
+      })
+      if (response.status === 200) {
+        console.log(response.data)
+      } else {
+        console.error(response.error);
+      }
     } catch (error) {
       console.error(error);
     }
