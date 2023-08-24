@@ -6,7 +6,6 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import markdownit from 'markdown-it'
-import dayjs from 'dayjs'
 import { ref, uploadBytes } from 'firebase/storage'
 import { storage } from '../../../firebase'
 import Loading from '../../../components/loading'
@@ -23,10 +22,10 @@ export default function NewTour() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [body, setBody] = useState('')
-  const [price, setPrice] = useState()
+  const [price, setPrice] = useState(0)
   const [firstDay, setFirstDay] = useState()
   const [lastDay, setLastDay] = useState()
-  const [maxCapacity, setMaxCapacity] = useState()
+  const [maxCapacity, setMaxCapacity] = useState(0)
 
   // ツアー情報を取得
   const getTourData = async () => {
@@ -43,8 +42,9 @@ export default function NewTour() {
         setDescription(tourData.description)
         setBody(tourData.body)
         setPrice(tourData.price)
-        setFirstDay(dayjs(dayjs(tourData.first_day).format('YYYY-MM-DD HH:mm')))
-        setLastDay(dayjs(dayjs(tourData.last_day).format('YYYY-MM-DD HH:mm')))
+        // TODO: 日付のフォーマットを変換
+        // setFirstDay(tourData.first_day)
+        // setLastDay(tourData.last_day)
         setMaxCapacity(tourData.max_capacity)
         setIsLoading(false)
       } else {
@@ -178,7 +178,6 @@ export default function NewTour() {
                   id="値段"
                   label="値段"
                   size="small"
-                  type="number"
                   fullWidth
                   InputProps={{
                     startAdornment: <InputAdornment position="start">¥</InputAdornment>,
@@ -224,7 +223,6 @@ export default function NewTour() {
                   id="定員"
                   label="定員"
                   size="small"
-                  type="number"
                   fullWidth
                   value={maxCapacity}
                   onChange={(e) => setMaxCapacity(e.target.value)}
