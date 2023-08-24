@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { Box, Button, Divider } from '@mui/material'
 import markdownit from 'markdown-it'
+import dayjs from 'dayjs'
 import Loading from "../../components/loading";
 
 
@@ -54,8 +55,9 @@ export default function ViewOneTour() {
         <>
           <div className="Info">
             <h2>{tourData.name}</h2>
-            <p>{tourData.price}円/人</p>
             <p>{tourData.description}</p>
+            <p>{dayjs(tourData.first_day).format("YYYY/MM/DD hh:mm")} ~ {dayjs(tourData.last_day).format("YYYY/MM/DD hh:mm")}</p>
+            <p>{tourData.price}円/人</p>
           </div>
 
           <Box sx={{ m: '1ch' }}>
