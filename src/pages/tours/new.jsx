@@ -25,42 +25,40 @@ export default function NewTour() {
   const [lastDay, setLastDay] = useState()
   const [maxCapacity, setMaxCapacity] = useState(0)
 
-  // ページアクセス時にユーザーが管理者かどうかを確認
-  useEffect(() => {
-    const checkIsAdmin = async () => {
-      try {
-        const response = await axios.get('/users/is_admin', {
-          headers: {
-            Authorization: `DummyToken`,
-          },
-        })
-        if (response.data.is_admin) {
-          setIsLoading(false)
-        } else {
-          navigate('/')
-        }
-      } catch (e) {
-        console.error(e)
-        //navigate('/')
+  // 管理者かどうかを確認
+  const checkIsAdmin = async () => {
+    try {
+      const response = await axios.get('/users/is_admin', {
+        headers: {
+          Authorization: `DummyToken`,
+        },
+      })
+      if (response.status === 200 && response.data.is_admin) {
+        setIsLoading(false)
+      } else {
+        navigate('/')
       }
+    } catch (e) {
+      console.error(e)
+      navigate('/')
     }
-    checkIsAdmin()
-  }, [])
+  }
 
   // 新規ツアー作成
   const handleSubmit = async () => {
     try {
       const api = axios.create({
         headers: {
-          Authorization: `DummyToken`,
+          'Content-Type': 'application/json',
+          'Authorization': `DummyToken`,
         },
       })
       const response = await api.post('/tours', {
-        user_id: 1, // temporary user_id
+        user_id: '1', // temporary user_id
         name: name,
         description: description,
         body: body,
-        price: price,
+        price: Number(price),
         dates: {
           first_day: firstDay,
           last_day: lastDay
@@ -73,11 +71,11 @@ export default function NewTour() {
       if (response.status === 200) {
         navigate(`/tours/${response.data.tour_id}`)
       } else {
-        console.error(e)
+        console.error(error)
         setErrorMessage(response.data.message)
       }
     } catch (error) {
-      console.error(e)
+      console.error(error)
       setErrorMessage(error.response?.data?.message || error.message)
     }
   }
@@ -97,6 +95,11 @@ export default function NewTour() {
       setImage(e.target.files[0])
     }
   }
+
+  // ページアクセス時
+  useEffect(() => {
+    //checkIsAdmin()
+  }, [])
 
   return (
     <div>
