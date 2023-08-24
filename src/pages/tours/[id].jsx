@@ -53,8 +53,7 @@ function App() {
         <p>{data.description}</p>
       </div>
    
-   {/* /bookingPageにするなら↓ */}
-      <Button variant="contained" onClick={() => {window.location.href = '/booking'}}>予約</Button>
+  
       
 
 
@@ -76,6 +75,8 @@ function App() {
             onChange={handleChange}
             sx={{width: 200}}
           >
+
+          
             <MenuItem value={1}>1</MenuItem>
             <MenuItem value={2}>2</MenuItem>
             <MenuItem value={3}>3</MenuItem>
@@ -83,7 +84,7 @@ function App() {
           </Select>
         </FormControl>
         
-        {/* bookingにPOSTする？ */}
+    
         <Button variant="contained" onClick={() => {window.location.href = '/booking'}}>予約</Button>
       </Box>
     </Paper>
