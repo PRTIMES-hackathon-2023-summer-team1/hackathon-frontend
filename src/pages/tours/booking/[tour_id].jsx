@@ -18,6 +18,7 @@ function App() {
   const [tourData, setTourData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [people, setPeople] = useState(1);
+
   const handleChange = (event) => {
     setPeople(event.target.value);
   };
@@ -50,18 +51,19 @@ function App() {
   // 予約作成
   const postBookingInfo = async (e) => {
     try {
-      const response = await fetch("http://localhost:8080/bookings", {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await axios.post(
+        `https://localhost/bookings`,
+        {
+          user_id: tourData.user_id,
+          tour_id: tourData.tour_id,
+          participants: people,
         },
-      });
-
-      const res = await api.post(`/bookings`, {
-        tour_id: tour_id,
-        people: people,
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (res.status === 200) {
         // 予約一覧ページへリダイレクト
         navigate("/bookings");
