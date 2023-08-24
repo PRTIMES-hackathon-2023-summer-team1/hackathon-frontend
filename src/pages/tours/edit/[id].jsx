@@ -23,10 +23,10 @@ export default function NewTour() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [body, setBody] = useState('')
-  const [price, setPrice] = useState(0)
+  const [price, setPrice] = useState()
   const [firstDay, setFirstDay] = useState()
   const [lastDay, setLastDay] = useState()
-  const [maxCapacity, setMaxCapacity] = useState(0)
+  const [maxCapacity, setMaxCapacity] = useState()
 
   // ツアー情報を取得
   const getTourData = async () => {
@@ -178,6 +178,7 @@ export default function NewTour() {
                   id="値段"
                   label="値段"
                   size="small"
+                  type="number"
                   fullWidth
                   InputProps={{
                     startAdornment: <InputAdornment position="start">¥</InputAdornment>,
@@ -223,6 +224,7 @@ export default function NewTour() {
                   id="定員"
                   label="定員"
                   size="small"
+                  type="number"
                   fullWidth
                   value={maxCapacity}
                   onChange={(e) => setMaxCapacity(e.target.value)}
