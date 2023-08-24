@@ -6,6 +6,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import markdownit from 'markdown-it'
+import dayjs from 'dayjs'
 import { ref, uploadBytes } from 'firebase/storage'
 import { storage } from '../../../firebase'
 import Loading from '../../../components/loading'
@@ -42,9 +43,8 @@ export default function NewTour() {
         setDescription(tourData.description)
         setBody(tourData.body)
         setPrice(tourData.price)
-        // TODO: 日付のフォーマットを変換
-        // setFirstDay(tourData.first_day)
-        // setLastDay(tourData.last_day)
+        setFirstDay(dayjs(dayjs(tourData.first_day).format('YYYY-MM-DD HH:mm')))
+        setLastDay(dayjs(dayjs(tourData.last_day).format('YYYY-MM-DD HH:mm')))
         setMaxCapacity(tourData.max_capacity)
         setIsLoading(false)
       } else {
