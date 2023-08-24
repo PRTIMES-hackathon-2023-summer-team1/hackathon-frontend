@@ -29,21 +29,12 @@ function App() {
     return <p>エラー</p>;
   }
 
-  if (isError) {
+  if (isLoading) {
     return <p>読み込み中</p>;
   }
 
   return (
     <>
-      <h1>This is TopPage</h1>
-      <p
-        onClick={() => {
-          window.location.href = "/example";
-        }}
-      >
-        redirect to /example
-      </p>
-
       <ul className="container">
         {data.map((tour) => (
           <a href={`/tours/${tour.tour_id}`}>
