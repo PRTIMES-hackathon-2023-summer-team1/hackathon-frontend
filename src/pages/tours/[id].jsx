@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
-import { Box, Divider } from '@mui/material'
+import { Box, Button, Divider } from '@mui/material'
 import markdownit from 'markdown-it'
 import Loading from "../../components/loading";
 
@@ -11,6 +11,7 @@ export default function ViewOneTour() {
   const tourId = useParams().id
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false) // 仮置き，認証ができたらContextに移行
   const [tourData, setTourData] = useState({})
 
   // ツアー情報を取得
@@ -35,13 +36,17 @@ export default function ViewOneTour() {
     }
   }
 
+  const redirectToBooking = () => {
+    if (isLoggedIn) {
+      navigate(`/tours/booking/${tourId}`)
+    } else {
+      navigate(`/login?redirect=/tours/booking/${tourId}`)
+    }
+  }
+
   useEffect(() => {
     getTourData()
   }, [])
-
-  const handleChange = (event) => {
-    setPeople(event.target.value);
-  };  
 
   return (
     <div className="detail">
@@ -61,6 +66,14 @@ export default function ViewOneTour() {
               />
             </div>
           </Box>
+
+          <Button
+            variant="contained"
+            onClick={redirectToBooking}
+          >
+            このツアーを予約する
+          </Button>
+
         </>
       )}
     </div>
