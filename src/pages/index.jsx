@@ -1,13 +1,18 @@
 import "./index.css";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { Box, TextField, Button, Grid } from '@mui/material'
 import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
+import Loading from "../components/loading";
 dayjs.locale(ja);
 
 function App() {
+
+  const [searchKeyword, setSearchKeyword] = useState('')
+
   const [data, setData] = useState([]); // <-- Generics で受け取った型を data の型とする
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
 
   useEffect(() => {
@@ -20,7 +25,7 @@ function App() {
         console.error(err);
         setError(true);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     })();
   }, []);
@@ -30,7 +35,7 @@ function App() {
   }
 
   if (isLoading) {
-    return <p>読み込み中</p>;
+    return <Loading/>;
   }
 
   return (
@@ -44,6 +49,8 @@ function App() {
               id="ここに単語を入れて検索"
               label="ここに単語を入れて検索"
               fullWidth
+              value={searchKeyword}
+              onChange={(e)=>{setSearchKeyword(e.target.value)}}
             />
           </Grid>
           <Grid item xs={1}>
@@ -51,7 +58,30 @@ function App() {
               sx={{ m: '1ch' }}
               variant="contained"
               fullWidth
-              onClick={(e)=>{}}
+              onClick={async (e)=>{
+                if (searchKeyword === '') {
+                  alert('検索ワードを入力してください')
+                  return
+                }
+                // 検索して表示するデータを更新する
+                setIsLoading(true)
+                try {
+                  const response = await axios.get(`/tours/search?keyword=${searchKeyword}`, {
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `DummyToken`,
+                    },
+                  })
+                  if (response.status === 200) {
+                    setData(response.data)
+                    setIsLoading(false)
+                  } else {
+                    console.error(response.error)
+                  }
+                } catch (error) {
+                  console.error(error)
+                }
+              }}
             >
               検索
             </Button>
