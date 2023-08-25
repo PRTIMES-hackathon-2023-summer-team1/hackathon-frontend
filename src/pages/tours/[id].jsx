@@ -55,13 +55,13 @@ export default function ViewOneTour() {
       ) : (
         <>
           <div className="Info">
-            <h2>{tourData.name}</h2>
-            <p>{tourData.description}</p>
-            <p>
-              {dayjs(tourData.first_day).format("YYYY/MM/DD hh:mm")} ~{" "}
-              {dayjs(tourData.last_day).format("YYYY/MM/DD hh:mm")}
-            </p>
-            <p>{tourData.price}円/人</p>
+          <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#333' }}>{tourData.name}</h2>
+          <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#F00' }}>{tourData.price}円~</h3>
+          <p style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#444' }}>{tourData.description}</p>
+          <h4 style={{ fontSize: '0.9rem', color: '#444' }}>
+            {dayjs(tourData.first_day).format("YYYY/MM/DD hh:mm")} -
+            {dayjs(tourData.last_day).format("YYYY/MM/DD hh:mm")}
+          </h4>
           </div>
 
           <Box sx={{ m: "1ch" }}>

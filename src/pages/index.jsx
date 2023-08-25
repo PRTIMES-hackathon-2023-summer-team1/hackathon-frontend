@@ -99,10 +99,10 @@ function App() {
                 transition="box-shadow 0.3s ease"
                 _hover={{ boxShadow: '0px 6px 8px rgba(0, 0, 0, 0.2)' }}
               >
-                <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#333' }}>{tour.name}</h2>
-                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: '#666' }}>￥{tour.price}</h3>
-                <p style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#888' }}>{tour.description}</p>
-                <h4 style={{ fontSize: '0.9rem', color: '#aaa' }}>
+                <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#333' }}>{tour.name}</h2>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#F00' }}>{tour.price}円~</h3>
+                <p style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#444' }}>{tour.description}</p>
+                <h4 style={{ fontSize: '0.9rem', color: '#444' }}>
                   {dayjs(tour.first_day).format("YYYY/MM/DD hh:mm")} -
                   {dayjs(tour.last_day).format("YYYY/MM/DD hh:mm")}
                 </h4>
