@@ -39,8 +39,9 @@ export default function ViewOneTour() {
   };
 
   const redirectToBooking = () => {
-    if (isLoggedIn) {
-      navigate(`https://localhost:8080/tours/booking/${tourId}`);
+    if (sessionStorage.getItem("token") !== null /* ログイン判定のAPIが無いのでtokenの有無で代用 */) {
+      console.log(sessionStorage.getItem("token"))
+      navigate(`/tours/booking/${tourId}`);
     } else {
       navigate(
         `https://localhost:8080/login?redirect=/tours/booking/${tourId}`
