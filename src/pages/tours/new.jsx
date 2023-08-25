@@ -12,6 +12,7 @@ import Loading from '../../components/loading'
 
 export default function NewTour() {
 
+  const token = sessionStorage.getItem('token')
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -31,7 +32,6 @@ export default function NewTour() {
       const response = await axios.get('/users/is_admin', {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `DummyToken`,
         },
       })
       if (response.status === 200 && response.data.is_admin) {
@@ -51,7 +51,7 @@ export default function NewTour() {
       const api = axios.create({
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `DummyToken`,
+          'Authorization': `Bearer ${token}`,
         },
       })
       const response = await api.post('/tours', {
