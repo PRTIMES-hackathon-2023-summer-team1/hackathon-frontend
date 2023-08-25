@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { Grid } from '@mui/material';
 
 const HeaderContainer = styled.div`
-  background-color: #68c3d4;
+  background: linear-gradient(135deg, #68c3d4, #2980b9);
   padding: 10px 0;
   border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const HeaderItem = styled.div`
@@ -17,17 +18,17 @@ const HeaderItem = styled.div`
   border-radius: 16px;
   
   &:hover {
-    background-color: #429baa;
+    background-color: #1e5f74;
   }
 `;
 
 const redirectToBooking = () => {
   if (sessionStorage.getItem('token') !== null) {
-    location.href = '/bookings'
+    location.href = '/bookings';
   } else {
-    location.href = '/login?redirect=/bookings'
+    location.href = '/login?redirect=/bookings';
   }
-}
+};
 
 export default function Header() {
   return (
