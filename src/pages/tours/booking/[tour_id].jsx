@@ -12,13 +12,13 @@ import dayjs from "dayjs";
 import "./tour_id.css";
 
 function App() {
+
   const { tour_id } = useParams();
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   const [tourData, setTourData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [people, setPeople] = useState(1);
-
   const handleChange = (event) => {
     setPeople(event.target.value);
   };
@@ -51,24 +51,21 @@ function App() {
   // 予約作成
   const postBookingInfo = async (e) => {
     try {
-      const res = await axios.post(
-        `https://localhost/bookings`,
-        {
-          user_id: tourData.user_id,
-          tour_id: tourData.tour_id,
-          participants: people,
+      const api = axios.create({
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (res.status === 200) {
+      })
+      const response = await api.post(`/bookings`, {
+        tour_id: tour_id,
+        people: people,
+      })
+      if (response.status === 200) {
         // 予約一覧ページへリダイレクト
-        navigate("/bookings");
+        navigate('/bookings')
       } else {
-        console.error(res.error);
+        console.error(response.error);
       }
     } catch (error) {
       console.error(error);
