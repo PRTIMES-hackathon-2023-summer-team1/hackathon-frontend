@@ -40,7 +40,11 @@ function App() {
   return (
     <>
       <Box>
-        <Grid container justifyContent={"space-between"}>
+        <Grid
+          container
+          justifyContent={"space-between"}
+          sx={{ paddingInline: "50px", paddingTop: "24px" }}
+        >
           <Grid item xs={8}>
             <TextField
               required
@@ -97,7 +101,7 @@ function App() {
       ) : (
         <ul className="container">
           {data.map((tour) => (
-            <a href={`/tours/${tour.tour_id}`}>
+            <a key={tour.tour_id} href={`/tours/${tour.tour_id}`}>
               <li className="tourInfo">
                 <h2>{tour.name}</h2>
                 <h3>￥{tour.price}</h3>
