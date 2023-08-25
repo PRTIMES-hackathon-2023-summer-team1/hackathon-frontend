@@ -1,3 +1,8 @@
+body {
+  width: 70%;
+  margin: auto;
+}
+
 .tourInfo {
   border-radius: 20px;
   box-shadow: 0px 1px 5px rgb(0 0 0 / 8%);
@@ -19,9 +24,9 @@
   justify-content: center;
 }
 
-.container a{
-    color: #181E4B;
-    text-decoration: none;
+.container a {
+  color: #181e4b;
+  text-decoration: none;
 }
 
 /* .tourInfo::after{
