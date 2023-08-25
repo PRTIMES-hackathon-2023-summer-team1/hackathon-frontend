@@ -11,14 +11,14 @@ function App() {
 
   const [searchKeyword, setSearchKeyword] = useState('')
 
-  const [data, setData] = useState([]); // <-- Generics で受け取った型を data の型とする
+  const [data, setData] = useState([]); 
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("http://localhost:8080/tours"); // <-- 引数で受け取った url を fetch する
+        const res = await fetch("http://localhost:8080/tours"); 
         const data = await res.json();
         setData(data);
       } catch (err) {
@@ -39,74 +39,79 @@ function App() {
   }
 
   return (
-    <>
+    <Box p={4}>
 
-      <Box >
-        <Grid container>
-          <Grid item xs={11}>
-            <TextField
-              required
-              id="ここに単語を入れて検索"
-              label="ここに単語を入れて検索"
-              fullWidth
-              value={searchKeyword}
-              onChange={(e)=>{setSearchKeyword(e.target.value)}}
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <Button
-              sx={{ m: '1ch' }}
-              variant="contained"
-              fullWidth
-              onClick={async (e)=>{
-                if (searchKeyword === '') {
-                  alert('検索ワードを入力してください')
-                  return
-                }
-                // 検索して表示するデータを更新する
-                setIsLoading(true)
-                try {
-                  const response = await axios.get(`/tours/search?keyword=${searchKeyword}`, {
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `DummyToken`,
-                    },
-                  })
-                  if (response.status === 200) {
-                    setData(response.data)
-                    setIsLoading(false)
-                  } else {
-                    console.error(response.error)
-                  }
-                } catch (error) {
-                  console.error(error)
-                }
-              }}
-            >
-              検索
-            </Button>
-          </Grid>
+      <Grid container>
+        <Grid item xs={11}>
+          <TextField
+            required
+            id="search-keyword"
+            label="ここに単語を入れて検索"
+            fullWidth
+            value={searchKeyword}
+            onChange={(e)=>{setSearchKeyword(e.target.value)}}
+          />
         </Grid>
-      </Box>
+        <Grid item xs={1}>
+          <Button
+            sx={{ m: '1ch' }}
+            variant="contained"
+            fullWidth
+            onClick={async () => {
+              if (searchKeyword === '') {
+                alert('検索ワードを入力してください')
+                return
+              }
+              setIsLoading(true)
+              try {
+                const response = await axios.get(`/tours/search?keyword=${searchKeyword}`, {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `DummyToken`,
+                  },
+                })
+                if (response.status === 200) {
+                  setData(response.data)
+                  setIsLoading(false)
+                } else {
+                  console.error(response.error)
+                }
+              } catch (error) {
+                console.error(error)
+              }
+            }}
+          >
+            検索
+          </Button>
+        </Grid>
+      </Grid>
 
       { data.length === 0 ? <h1>検索結果がありません</h1> :
-        <ul className="container">
+        <Box mt={3}>
           {data.map((tour) => (
-            <a href={`/tours/${tour.tour_id}`}>
-              <li className="tourInfo">
-                <h2>{tour.name}</h2>
-                <h3>￥{tour.price}</h3>
-                <p>{tour.description}</p>
-                <h4>
+            <a href={`/tours/${tour.tour_id}`} key={tour.tour_id} style={{ textDecoration: 'none' }}>
+              <Box
+                className="tourInfo"
+                p={3}
+                mb={3}
+                borderRadius={16}
+                boxShadow="0px 4px 6px rgba(0, 0, 0, 0.1)"
+                transition="box-shadow 0.3s ease"
+                _hover={{ boxShadow: '0px 6px 8px rgba(0, 0, 0, 0.2)' }}
+              >
+                <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#333' }}>{tour.name}</h2>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: '#666' }}>￥{tour.price}</h3>
+                <p style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#888' }}>{tour.description}</p>
+                <h4 style={{ fontSize: '0.9rem', color: '#aaa' }}>
                   {dayjs(tour.first_day).format("YYYY/MM/DD hh:mm")} -
                   {dayjs(tour.last_day).format("YYYY/MM/DD hh:mm")}
                 </h4>
-              </li>
+              </Box>
             </a>
           ))}
-        </ul>
+        </Box>
       }
-    </>
+    </Box>
   );
 }
 
