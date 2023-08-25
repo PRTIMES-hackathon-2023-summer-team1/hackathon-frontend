@@ -29,14 +29,11 @@ function App() {
   // ツアー情報を取得
   const getTourData = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/tours/${tour_id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.get(`/tours/${tour_id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (response.status === 200) {
         setTourData(response.data);
         setIsLoading(false);

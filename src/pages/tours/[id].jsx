@@ -16,15 +16,12 @@ export default function ViewOneTour() {
   // ツアー情報を取得
   const getTourData = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/tours/${tourId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `DummyToken`,
-          },
-        }
-      );
+      const response = await axios.get(`/tours/${tourId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `DummyToken`,
+        },
+      });
       if (response.status === 200) {
         setTourData(response.data);
         setIsLoading(false);
@@ -43,9 +40,7 @@ export default function ViewOneTour() {
       console.log(sessionStorage.getItem("token"))
       navigate(`/tours/booking/${tourId}`);
     } else {
-      navigate(
-        `https://localhost:8080/login?redirect=/tours/booking/${tourId}`
-      );
+      navigate(`/login?redirect=/tours/booking/${tourId}`);
     }
   };
 
@@ -59,28 +54,24 @@ export default function ViewOneTour() {
         <Loading />
       ) : (
         <>
-          <div className="tour-details">
-            <div className="Info">
-              <h2>{tourData.name}</h2>
-              <p>{tourData.description}</p>
-              <p>
-                {dayjs(tourData.first_day).format("YYYY/MM/DD hh:mm")} ~{" "}
-                {dayjs(tourData.last_day).format("YYYY/MM/DD hh:mm")}
-              </p>
-              <p>{tourData.price}円/人</p>
-            </div>
+          <div className="Info">
+            <h2>{tourData.name}</h2>
+            <p>{tourData.description}</p>
+            <p>
+              {dayjs(tourData.first_day).format("YYYY/MM/DD hh:mm")} ~{" "}
+              {dayjs(tourData.last_day).format("YYYY/MM/DD hh:mm")}
+            </p>
+            <p>{tourData.price}円/人</p>
           </div>
 
           <Box sx={{ m: "1ch" }}>
             <Divider variant="inset" />
-            <div className="tour-description">
-              <div style={{ textAlign: "left" }}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: markdownit().render(String(tourData.body)),
-                  }}
-                />
-              </div>
+            <div style={{ textAlign: "left" }}>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: markdownit().render(String(tourData.body)),
+                }}
+              />
             </div>
           </Box>
 
