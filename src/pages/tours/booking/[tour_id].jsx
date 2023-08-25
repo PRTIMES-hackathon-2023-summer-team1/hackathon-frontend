@@ -9,6 +9,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
+import Loading from "../../../components/loading";
 import "./tour_id.css";
 
 function App() {
@@ -16,9 +17,11 @@ function App() {
   const { tour_id } = useParams();
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
+
   const [tourData, setTourData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [people, setPeople] = useState(1);
+
   const handleChange = (event) => {
     setPeople(event.target.value);
   };
@@ -46,8 +49,6 @@ function App() {
     getTourData();
   }, []);
 
-  if (!tourData) return <></>;
-
   // 予約作成
   const postBookingInfo = async (e) => {
     try {
@@ -59,7 +60,7 @@ function App() {
       })
       const response = await api.post(`/bookings`, {
         tour_id: tour_id,
-        people: people,
+        participants: people,
       })
       if (response.status === 200) {
         // 予約一覧ページへリダイレクト
@@ -71,6 +72,8 @@ function App() {
       console.error(error);
     }
   };
+
+  if (isLoading) return <Loading/>;
 
   return (
     <>
